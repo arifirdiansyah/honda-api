@@ -8,8 +8,7 @@ export const connectDatabase = () => {
   try {
     mongoose
       .connect(
-        `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_URL}${process.env.DB_NAME}?retryWrites=true&w=majority&appName=skripsi`,
-        options
+        `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_URL}${process.env.DB_NAME}?retryWrites=true&w=majority&appName=skripsi`
       )
       .then(() => {
         console.log('Connection success');
