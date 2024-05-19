@@ -14,9 +14,10 @@ export const addMotorCycle = async (req, res) => {
 
     // save motorcycle to db
     const savedMotorCycle = await motorCycle.save();
+    const retrieveMotorCycle = await Motorcycle.findById(savedMotorCycle.id).populate('catalogId');
 
     // return motor cycle response
-    return res.send(savedMotorCycle);
+    return res.send(retrieveMotorCycle);
   } catch ( e ) {
     return res.status(400).sendError(e);
   }
@@ -34,13 +35,16 @@ export const updateMotorCycle = async (req, res) => {
 
 
     // Find motorcycle by id and update the data on DB
-    const motorCycle = await Motorcycle.findByIdAndUpdate(motorCycleId, lodash.pick(body, ['modelName', 'buildDate', 'transmission', 'color', 'cover']));
+    let motorCycle = await Motorcycle.findByIdAndUpdate(motorCycleId, lodash.pick(body, ['catalogId', 'modelName', 'buildDate', 'transmission', 'color', 'cover', 'vin']));
 
     if (!motorCycle) {
       return res.status(404).sendError('Motor cycle not found!');
     }
 
-    return res.send({ message: 'Motorcycle successfully updated!' });
+    // Retrieve updated data
+    motorCycle = await Motorcycle.findById(motorCycleId).populate('catalogId');
+
+    return res.send(motorCycle);
   } catch ( e ) {
     return res.status(500).sendError(e);
   }
