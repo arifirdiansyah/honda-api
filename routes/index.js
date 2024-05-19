@@ -7,7 +7,6 @@ import * as catalogController from '../controller/CatalogController.js';
 import * as motorcycleController from '../controller/MotorcycleController.js';
 import * as partController from '../controller/PartController.js';
 import * as dealershipController from '../controller/DealershipController.js';
-import * as addressController from '../controller/AddressController.js';
 import * as serviceController from '../controller/ServiceController.js';
 import * as servicePackageController from '../controller/ServicePackageController.js';
 import * as replacePartController from '../controller/ReplacePartController.js';
@@ -53,19 +52,12 @@ export const routes = app => {
   app.get('/part/:partId', partController.findPart);
   app.get('/parts', partController.getAllPart);
 
-  /*-----------------------Part Dealership---------------------------------------*/
+  /*-----------------------Dealership Route---------------------------------------*/
   app.post('/dealership/add', dealershipController.createDealership);
   app.put('/dealership/update/:dealershipId', dealershipController.updateDealership);
   app.delete('/dealership/:dealershipId', dealershipController.deleteDealership);
   app.get('/dealership/:dealershipId', dealershipController.findDealershipById);
   app.get('/dealerships', dealershipController.getAllDealership);
-
-  /*-----------------------Part Address---------------------------------------*/
-  app.post('/address/add', addressController.createAddress);
-  app.put('/address/update/:addressId', addressController.updateAddress);
-  app.delete('/address/:addressId', addressController.deleteAddress);
-  app.get('/address/:addressId', addressController.findAddressById);
-  app.get('/addresses', addressController.getAllAddress);
 
   /*-----------------------Part Service---------------------------------------*/
   app.post('/service/add', serviceController.createService);

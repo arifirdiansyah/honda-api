@@ -1,4 +1,4 @@
-import { Dealership } from '../models/Dealership.js';
+import { DealershipModel } from '../models/DealershipModel.js';
 import lodash from 'lodash';
 
 /*
@@ -10,7 +10,7 @@ export const createDealership = async (req, res) => {
     let body = req.body;
 
     // Create dealership object
-    const dealership = new Dealership(body);
+    const dealership = new DealershipModel(body);
 
     // Save dealership to db
     const savedDealership = await dealership.save();
@@ -32,15 +32,15 @@ export const updateDealership = async (req, res) => {
     let body = req.body;
 
     // Find dealership by id and update the data in the database
-    const dealership = await Dealership.findByIdAndUpdate(dealershipId, lodash.pick(body, ['name', 'address']), {
+    const dealership = await DealershipModel.findByIdAndUpdate(dealershipId, lodash.pick(body, ['name', 'address']), {
       new: true,
     });
 
     if (!dealership) {
-      return res.status(404).send({ error: 'Dealership not found!' });
+      return res.status(404).send({ error: 'DealershipModel not found!' });
     }
 
-    return res.send({ message: 'Dealership successfully updated!' });
+    return res.send({ message: 'DealershipModel successfully updated!' });
   } catch (error) {
     return res.status(500).send({ error: 'Failed to update dealership', details: error });
   }
@@ -55,7 +55,7 @@ export const deleteDealership = async (req, res) => {
     const { dealershipId } = req.params;
 
     // Find dealership by id and delete on DB
-    const dealership = await Dealership.findByIdAndDelete(dealershipId);
+    const dealership = await DealershipModel.findByIdAndDelete(dealershipId);
 
     if (!dealership) {
       return res.status(404).send({ error: 'Dealership not found!' });
@@ -76,10 +76,10 @@ export const findDealershipById = async (req, res) => {
     const { dealershipId } = req.params;
 
     // Find dealership by id
-    const dealership = await Dealership.findById(dealershipId);
+    const dealership = await DealershipModel.findById(dealershipId);
 
     if (!dealership) {
-      return res.status(404).send({ error: 'Dealership not found!' });
+      return res.status(404).send({ error: 'DealershipModel not found!' });
     }
 
     return res.send(dealership);
@@ -94,7 +94,7 @@ export const findDealershipById = async (req, res) => {
  */
 export const getAllDealership = async (req, res) => {
   try {
-    const dealerships = await Dealership.find();
+    const dealerships = await DealershipModel.find();
     return res.send(dealerships);
   } catch (error) {
     return res.status(500).send({ error: 'Failed to load dealerships data', details: error });
