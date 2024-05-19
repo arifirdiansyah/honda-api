@@ -1,4 +1,5 @@
-import { Service } from '../models/ServiceModel.js';
+import { Service } from '../models/Service.js';
+import lodash from 'lodash';
 
 /*
  * GET
@@ -20,8 +21,8 @@ export const getAllService = async (req, res) => {
  */
 export const findServiceById = async (req, res) => {
   try {
-    const { id } = req.params;
-    const service = await Service.findById(id);
+    const { serviceId } = req.params;
+    const service = await Service.findById(serviceId);
 
     if (!service) {
       return res.status(404).send({ error: 'Service not found!' });
@@ -29,7 +30,7 @@ export const findServiceById = async (req, res) => {
     return res.json(service);
   } catch (error) {
     console.error('Error finding service by id:', error);
-    return res.status(500).send({ error: 'Internal Server Error' });
+    return res.status(500).send({ error: 'Failed to find service', details: error });
   }
 };
 
@@ -39,13 +40,18 @@ export const findServiceById = async (req, res) => {
  */
 export const createService = async (req, res) => {
   try {
-    const { servicePackage, motorcycleId, dealership, technician, serviceDate, mileage, price } = req.body;
-    const service = new Service({ servicePackage, motorcycleId, dealership, technician, serviceDate, mileage, price });
-    await service.save();
-    return res.status(201).json(service);
+    let body = req.body;
+
+    // Create service object
+    const service = new Service(body);
+
+    // Save service to db
+    const savedService = await service.save();
+
+    // Return service response
+    return res.status(201).json(savedService);
   } catch (error) {
-    console.error('Error creating service:', error);
-    return res.status(500).send({ error: 'Failed to create service' });
+    return res.status(400).send({ error: 'Failed to create service', details: error });
   }
 };
 
@@ -55,22 +61,31 @@ export const createService = async (req, res) => {
  */
 export const updateService = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { servicePackage, motorcycleId, dealership, technician, serviceDate, mileage, price } = req.body;
+    const { serviceId } = req.params;
+    let body = req.body;
 
+    // Find service by id and update the data in the database
     const service = await Service.findByIdAndUpdate(
-      id,
-      { servicePackage, motorcycleId, dealership, technician, serviceDate, mileage, price },
+      serviceId,
+      lodash.pick(body, [
+        'servicePackage',
+        'motorcycleId',
+        'dealership',
+        'technician',
+        'serviceDate',
+        'mileage',
+        'price',
+      ]),
       { new: true }
     );
 
     if (!service) {
       return res.status(404).send({ error: 'Service not found!' });
     }
-    return res.json(service);
+
+    return res.send({ message: 'Service successfully updated!' });
   } catch (error) {
-    console.error('Error updating service:', error);
-    return res.status(500).send({ error: 'Failed to update service' });
+    return res.status(500).send({ error: 'Failed to update service', details: error });
   }
 };
 
@@ -80,15 +95,17 @@ export const updateService = async (req, res) => {
  */
 export const deleteService = async (req, res) => {
   try {
-    const { id } = req.params;
-    const service = await Service.findByIdAndDelete(id);
+    const { serviceId } = req.params;
+
+    // Find service by id and delete on DB
+    const service = await Service.findByIdAndDelete(serviceId);
 
     if (!service) {
       return res.status(404).send({ error: 'Service not found!' });
     }
-    return res.json({ message: 'Service deleted successfully' });
+
+    return res.send({ message: 'Service deleted successfully' });
   } catch (error) {
-    console.error('Error deleting service:', error);
-    return res.status(500).send({ error: 'Failed to delete service' });
+    return res.status(500).send({ error: 'Failed to delete service', details: error });
   }
 };

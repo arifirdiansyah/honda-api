@@ -1,16 +1,74 @@
 import { ServicePackage } from '../models/ServicePackage.js';
+import lodash from 'lodash';
 
 /*
- * GET
- * Find all service packages
+ * POST
+ * Add service package data
  */
-export const getAllServicePackage = async (req, res) => {
+export const addServicePackage = async (req, res) => {
   try {
-    const servicePackages = await ServicePackage.find();
-    return res.json(servicePackages);
+    let body = req.body;
+
+    // Create service package object
+    const servicePackage = new ServicePackage(body);
+
+    // Save service package to db
+    const savedServicePackage = await servicePackage.save();
+
+    // Return service package response
+    return res.send(savedServicePackage);
   } catch (error) {
-    console.error('Failed to load service packages data:', error);
-    return res.status(500).send({ error: 'Failed to load service packages data' });
+    console.error('Error adding service package:', error);
+    return res.status(400).send({ error: 'Failed to add service package', details: error.message });
+  }
+};
+
+/*
+ * PUT
+ * Update service package data
+ */
+export const updateServicePackage = async (req, res) => {
+  try {
+    const { servicePackageId } = req.params;
+    const body = req.body;
+
+    // Find service package by id and update the data in the database
+    const servicePackage = await ServicePackage.findByIdAndUpdate(
+      servicePackageId,
+      lodash.pick(body, ['packageName']),
+      { new: true }
+    );
+
+    if (!servicePackage) {
+      return res.status(404).send({ error: 'Service package not found!' });
+    }
+
+    return res.send({ message: 'Service package successfully updated!' });
+  } catch (error) {
+    console.error('Error updating service package:', error);
+    return res.status(500).send({ error: 'Failed to update service package', details: error.message });
+  }
+};
+
+/*
+ * DELETE
+ * Remove service package data
+ */
+export const deleteServicePackage = async (req, res) => {
+  try {
+    const { servicePackageId } = req.params;
+
+    // Find service package by id and delete it from the database
+    const servicePackage = await ServicePackage.findByIdAndDelete(servicePackageId);
+
+    if (!servicePackage) {
+      return res.status(404).send({ error: 'Service package not found!' });
+    }
+
+    return res.send({ message: 'Service package deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting service package:', error);
+    return res.status(500).send({ error: 'Failed to delete service package', details: error.message });
   }
 };
 
@@ -20,71 +78,32 @@ export const getAllServicePackage = async (req, res) => {
  */
 export const findServicePackageById = async (req, res) => {
   try {
-    const { id } = req.params;
-    const servicePackage = await ServicePackage.findById(id);
+    const { servicePackageId } = req.params;
+
+    // Find service package by id
+    const servicePackage = await ServicePackage.findById(servicePackageId);
 
     if (!servicePackage) {
       return res.status(404).send({ error: 'Service package not found!' });
     }
-    return res.json(servicePackage);
+
+    return res.send(servicePackage);
   } catch (error) {
     console.error('Error finding service package by id:', error);
-    return res.status(500).send({ error: 'Internal Server Error' });
+    return res.status(500).send({ error: 'Failed to find service package', details: error.message });
   }
 };
 
 /*
- * POST
- * Create a new service package
+ * GET
+ * Get all service packages
  */
-export const createServicePackage = async (req, res) => {
+export const getAllServicePackage = async (req, res) => {
   try {
-    const { packageName } = req.body;
-    const servicePackage = new ServicePackage({ packageName });
-    await servicePackage.save();
-    return res.status(201).json(servicePackage);
+    const servicePackages = await ServicePackage.find();
+    return res.send(servicePackages);
   } catch (error) {
-    console.error('Error creating service package:', error);
-    return res.status(500).send({ error: 'Failed to create service package' });
-  }
-};
-
-/*
- * PUT
- * Update an existing service package
- */
-export const updateServicePackage = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { packageName } = req.body;
-
-    const servicePackage = await ServicePackage.findByIdAndUpdate(id, { packageName }, { new: true });
-
-    if (!servicePackage) {
-      return res.status(404).send({ error: 'Service package not found!' });
-    }
-    return res.json(servicePackage);
-  } catch (error) {
-    console.error('Error updating service package:', error);
-    return res.status(500).send({ error: 'Failed to update service package' });
-  }
-};
-
-/*
- * DELETE
- * Delete an existing service package
- */
-export const deleteServicePackage = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const servicePackage = await ServicePackage.findByIdAndDelete(id);
-
-    if (!servicePackage) {
-      return res.status(404).send({ error: 'Service package not found!' });
-    }
-    return res.json({ message: 'Service package deleted successfully' });
-  } catch (error) {
-    console.error('Error deleting service package:', error);
-    return res.status(500).send({ error: 'Failed to delete service package' });
+    console.error('Error getting all service packages:', error);
+    return res.status(500).send({ error: 'Failed to get service packages', details: error.message });
   }
 };

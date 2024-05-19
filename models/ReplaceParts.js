@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 
-const replacedPartSchema = new Schema(
+const replacePartSchema = new Schema(
   {
     servicePackage: {
       type: [{ type: Schema.Types.ObjectId, ref: 'ServicePackage' }],
@@ -18,4 +18,4 @@ const replacedPartSchema = new Schema(
   }
 );
 
-export const ReplacedPart = model('ReplacedPart', replacedPartSchema);
+export const ReplacePart = model('ReplacePart', replacePartSchema);

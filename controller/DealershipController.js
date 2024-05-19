@@ -1,37 +1,5 @@
-import { Dealership } from '../models/DealershipModel.js';
-
-/*
- * GET
- * Find all dealerships
- */
-export const getAllDealership = async (req, res) => {
-  try {
-    const dealerships = await Dealership.find();
-    return res.json(dealerships);
-  } catch (error) {
-    console.error('Failed to load dealerships data:', error);
-    return res.status(500).send({ error: 'Failed to load dealerships data' });
-  }
-};
-
-/*
- * GET
- * Find dealership by name
- */
-export const findDealershipByName = async (req, res) => {
-  try {
-    const { name } = req.params;
-    const dealership = await Dealership.findOne({ name });
-
-    if (!dealership) {
-      return res.status(404).send({ error: 'Dealership not found!' });
-    }
-    return res.json(dealership);
-  } catch (error) {
-    console.error('Error finding dealership by name:', error);
-    return res.status(500).send({ error: 'Internal Server Error' });
-  }
-};
+import { Dealership } from '../models/Dealership.js';
+import lodash from 'lodash';
 
 /*
  * POST
@@ -39,13 +7,18 @@ export const findDealershipByName = async (req, res) => {
  */
 export const createDealership = async (req, res) => {
   try {
-    const { name, address } = req.body;
-    const dealership = new Dealership({ name, address });
-    await dealership.save();
-    return res.status(201).json(dealership);
+    let body = req.body;
+
+    // Create dealership object
+    const dealership = new Dealership(body);
+
+    // Save dealership to db
+    const savedDealership = await dealership.save();
+
+    // Return dealership response
+    return res.send(savedDealership);
   } catch (error) {
-    console.error('Error creating dealership:', error);
-    return res.status(500).send({ error: 'Failed to create dealership' });
+    return res.status(400).send({ error: 'Failed to create dealership', details: error });
   }
 };
 
@@ -55,18 +28,21 @@ export const createDealership = async (req, res) => {
  */
 export const updateDealership = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { name, address } = req.body;
+    const { dealershipId } = req.params;
+    let body = req.body;
 
-    const dealership = await Dealership.findByIdAndUpdate(id, { name, address }, { new: true });
+    // Find dealership by id and update the data in the database
+    const dealership = await Dealership.findByIdAndUpdate(dealershipId, lodash.pick(body, ['name', 'address']), {
+      new: true,
+    });
 
     if (!dealership) {
       return res.status(404).send({ error: 'Dealership not found!' });
     }
-    return res.json(dealership);
+
+    return res.send({ message: 'Dealership successfully updated!' });
   } catch (error) {
-    console.error('Error updating dealership:', error);
-    return res.status(500).send({ error: 'Failed to update dealership' });
+    return res.status(500).send({ error: 'Failed to update dealership', details: error });
   }
 };
 
@@ -76,15 +52,51 @@ export const updateDealership = async (req, res) => {
  */
 export const deleteDealership = async (req, res) => {
   try {
-    const { id } = req.params;
-    const dealership = await Dealership.findByIdAndDelete(id);
+    const { dealershipId } = req.params;
+
+    // Find dealership by id and delete on DB
+    const dealership = await Dealership.findByIdAndDelete(dealershipId);
 
     if (!dealership) {
       return res.status(404).send({ error: 'Dealership not found!' });
     }
-    return res.json({ message: 'Dealership deleted successfully' });
+
+    return res.send({ message: 'Successfully deleted' });
   } catch (error) {
-    console.error('Error deleting dealership:', error);
-    return res.status(500).send({ error: 'Failed to delete dealership' });
+    return res.status(500).send({ error: 'Failed to delete dealership', details: error });
+  }
+};
+
+/*
+ * GET
+ * Find dealership by id
+ */
+export const findDealershipById = async (req, res) => {
+  try {
+    const { dealershipId } = req.params;
+
+    // Find dealership by id
+    const dealership = await Dealership.findById(dealershipId);
+
+    if (!dealership) {
+      return res.status(404).send({ error: 'Dealership not found!' });
+    }
+
+    return res.send(dealership);
+  } catch (error) {
+    return res.status(500).send({ error: 'Failed to find dealership', details: error });
+  }
+};
+
+/*
+ * GET
+ * Get all dealerships
+ */
+export const getAllDealership = async (req, res) => {
+  try {
+    const dealerships = await Dealership.find();
+    return res.send(dealerships);
+  } catch (error) {
+    return res.status(500).send({ error: 'Failed to load dealerships data', details: error });
   }
 };

@@ -1,4 +1,5 @@
-import { Address } from '../models/AddressModel.js';
+import { Address } from '../models/Address.js';
+import lodash from 'lodash';
 
 /*
  * GET
@@ -10,7 +11,7 @@ export const getAllAddress = async (req, res) => {
     return res.json(addresses);
   } catch (error) {
     console.error('Failed to load addresses data:', error);
-    return res.status(500).send({ error: 'Failed to load addresses data' });
+    return res.status(500).send({ error: 'Failed to load addresses data', details: error.message });
   }
 };
 
@@ -29,7 +30,7 @@ export const findAddressById = async (req, res) => {
     return res.json(address);
   } catch (error) {
     console.error('Error finding address by id:', error);
-    return res.status(500).send({ error: 'Internal Server Error' });
+    return res.status(500).send({ error: 'Internal Server Error', details: error.message });
   }
 };
 
@@ -45,7 +46,7 @@ export const createAddress = async (req, res) => {
     return res.status(201).json(address);
   } catch (error) {
     console.error('Error creating address:', error);
-    return res.status(500).send({ error: 'Failed to create address' });
+    return res.status(500).send({ error: 'Failed to create address', details: error.message });
   }
 };
 
@@ -56,9 +57,13 @@ export const createAddress = async (req, res) => {
 export const updateAddress = async (req, res) => {
   try {
     const { id } = req.params;
-    const { provinces, state, city, subdistrict } = req.body;
+    const body = req.body;
 
-    const address = await Address.findByIdAndUpdate(id, { provinces, state, city, subdistrict }, { new: true });
+    const address = await Address.findByIdAndUpdate(
+      id,
+      lodash.pick(body, ['provinces', 'state', 'city', 'subdistrict']),
+      { new: true }
+    );
 
     if (!address) {
       return res.status(404).send({ error: 'Address not found!' });
@@ -66,7 +71,7 @@ export const updateAddress = async (req, res) => {
     return res.json(address);
   } catch (error) {
     console.error('Error updating address:', error);
-    return res.status(500).send({ error: 'Failed to update address' });
+    return res.status(500).send({ error: 'Failed to update address', details: error.message });
   }
 };
 
@@ -85,6 +90,6 @@ export const deleteAddress = async (req, res) => {
     return res.json({ message: 'Address deleted successfully' });
   } catch (error) {
     console.error('Error deleting address:', error);
-    return res.status(500).send({ error: 'Failed to delete address' });
+    return res.status(500).send({ error: 'Failed to delete address', details: error.message });
   }
 };

@@ -10,7 +10,7 @@ import * as dealershipController from '../controller/DealershipController.js';
 import * as addressController from '../controller/AddressController.js';
 import * as serviceController from '../controller/ServiceController.js';
 import * as servicePackageController from '../controller/ServicePackageController.js';
-import * as replacePartController from '../controller/ReplacedPartController.js';
+import * as replacePartController from '../controller/ReplacePartController.js';
 import * as vehicleOwnershipController from '../controller/VehicleOwnerShipController.js';
 
 export const routes = app => {
@@ -54,46 +54,46 @@ export const routes = app => {
   app.get('/parts', partController.getAllPart);
 
   /*-----------------------Part Dealership---------------------------------------*/
-  app.router.post('/dealership/add', dealershipController.addDealership);
-  app.router.put('/dealership/update/:dealershipId', dealershipController.updateDealership);
-  app.router.delete('/dealership/:dealershipId', dealershipController.deleteDealership);
-  app.router.get('/dealership/:dealershipId', dealershipController.findDealership);
-  app.router.get('/dealerships', dealershipController.getAllDealerships);
+  app.post('/dealership/add', dealershipController.createDealership);
+  app.put('/dealership/update/:dealershipId', dealershipController.updateDealership);
+  app.delete('/dealership/:dealershipId', dealershipController.deleteDealership);
+  app.get('/dealership/:dealershipId', dealershipController.findDealershipById);
+  app.get('/dealerships', dealershipController.getAllDealership);
 
   /*-----------------------Part Address---------------------------------------*/
-  app.router.post('/address/add', addressController.createAddress);
-  app.router.put('/address/update/:addressId', addressController.updateAddress);
-  app.router.delete('/address/:addressId', addressController.deleteAddress);
-  app.router.get('/address/:addressId', addressController.findAddressById);
-  app.router.get('/addresses', addressController.getAllAddresses);
+  app.post('/address/add', addressController.createAddress);
+  app.put('/address/update/:addressId', addressController.updateAddress);
+  app.delete('/address/:addressId', addressController.deleteAddress);
+  app.get('/address/:addressId', addressController.findAddressById);
+  app.get('/addresses', addressController.getAllAddress);
 
   /*-----------------------Part Service---------------------------------------*/
-  app.router.post('/service/add', serviceController.createService);
-  app.router.put('/service/update/:serviceId', serviceController.updateService);
-  app.router.delete('/service/:serviceId', serviceController.deleteService);
-  app.router.get('/service/:serviceId', serviceController.findServiceById);
-  app.router.get('/services', serviceController.getAllServices);
+  app.post('/service/add', serviceController.createService);
+  app.put('/service/update/:serviceId', serviceController.updateService);
+  app.delete('/service/:serviceId', serviceController.deleteService);
+  app.get('/service/:serviceId', serviceController.findServiceById);
+  app.get('/services', serviceController.getAllService);
 
-  /*-----------------------Part ServicePackage---------------------------------------*/
-  app.router.post('/servicePackage/add', servicePackageController.createServicePackage);
-  app.router.put('/servicePackage/update/:servicePackageId', servicePackageController.updateServicePackage);
-  app.router.delete('/servicePackage/:servicePackageId', servicePackageController.deleteServicePackage);
-  app.router.get('/servicePackage/:servicePackageId', servicePackageController.findServicePackageById);
-  app.router.get('/servicePackages', servicePackageController.getAllServicePackages);
+  /*----------------------- Part ServicePackage ---------------------------------------*/
+  app.post('/servicePackage/add', servicePackageController.addServicePackage);
+  app.put('/servicePackage/update/:servicePackageId', servicePackageController.updateServicePackage);
+  app.delete('/servicePackage/:servicePackageId', servicePackageController.deleteServicePackage);
+  app.get('/servicePackage/:servicePackageId', servicePackageController.findServicePackageById);
+  app.get('/servicePackages', servicePackageController.getAllServicePackage);
 
   /*-----------------------Part ReplacePart---------------------------------------*/
-  app.router.post('/replacePart/add', replacePartController.addReplacedPart);
-  app.router.put('/replacePart/update/:replacePartId', replacePartController.updateReplacedPart);
-  app.router.delete('/replacePart/:replacePartId', replacePartController.deleteReplacedPart);
-  app.router.get('/replacePart/:replacePartId', replacePartController.findReplacedPartById);
-  app.router.get('/replaceParts', replacePartController.getAllReplacedParts);
+  app.post('/replacePart/add', replacePartController.addReplacePart);
+  app.put('/replacePart/update/:replacePartId', replacePartController.updateReplacePart);
+  app.delete('/replacePart/:replacePartId', replacePartController.deleteReplacePart);
+  app.get('/replacePart/:replacePartId', replacePartController.findReplacePartById);
+  app.get('/replaceParts', replacePartController.getAllReplaceParts);
 
   /*-----------------------Part VehicleOwnerShip---------------------------------------*/
-  app.router.post('/vehicleOwnership/add', vehicleOwnershipController.addVehicleOwnership);
-  app.router.put('/vehicleOwnership/update/:vehicleOwnershipId', vehicleOwnershipController.updateVehicleOwnership);
-  app.router.delete('/vehicleOwnership/:vehicleOwnershipId', vehicleOwnershipController.deleteVehicleOwnership);
-  app.router.get('/vehicleOwnership/:vehicleOwnershipId', vehicleOwnershipController.findVehicleOwnershipById);
-  app.router.get('/vehicleOwnerships', vehicleOwnershipController.getAllVehicleOwnerships);
+  app.post('/vehicleOwnership/add', vehicleOwnershipController.addVehicleOwnership);
+  app.put('/vehicleOwnership/update/:vehicleOwnershipId', vehicleOwnershipController.updateVehicleOwnership);
+  app.delete('/vehicleOwnership/:vehicleOwnershipId', vehicleOwnershipController.deleteVehicleOwnership);
+  app.get('/vehicleOwnership/:vehicleOwnershipId', vehicleOwnershipController.findVehicleOwnershipById);
+  app.get('/vehicleOwnerships', vehicleOwnershipController.getAllVehicleOwnership);
 
   app.post('/file/upload/getUploadFileUrl', [auth], file.getFileUploadUrl);
 };
