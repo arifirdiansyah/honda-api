@@ -10,7 +10,6 @@ import * as dealershipController from '../controller/DealershipController.js';
 import * as serviceController from '../controller/ServiceController.js';
 import * as servicePackageController from '../controller/ServicePackageController.js';
 import * as replacePartController from '../controller/ReplacePartController.js';
-import * as vehicleOwnershipController from '../controller/VehicleOwnerShipController.js';
 
 export const routes = app => {
   // Render home page
@@ -80,12 +79,12 @@ export const routes = app => {
   app.get('/replacePart/:replacePartId', replacePartController.findReplacePartById);
   app.get('/replaceParts', replacePartController.getAllReplaceParts);
 
-  /*-----------------------Part VehicleOwnerShip---------------------------------------*/
-  app.post('/vehicleOwnership/add', vehicleOwnershipController.addVehicleOwnership);
-  app.put('/vehicleOwnership/update/:vehicleOwnershipId', vehicleOwnershipController.updateVehicleOwnership);
-  app.delete('/vehicleOwnership/:vehicleOwnershipId', vehicleOwnershipController.deleteVehicleOwnership);
-  app.get('/vehicleOwnership/:vehicleOwnershipId', vehicleOwnershipController.findVehicleOwnershipById);
-  app.get('/vehicleOwnerships', vehicleOwnershipController.getAllVehicleOwnership);
+  // /*-----------------------Part VehicleOwnerShip---------------------------------------*/
+  // app.post('/vehicleOwnership/add', vehicleOwnershipController.addVehicleOwnership);
+  // app.put('/vehicleOwnership/update/:vehicleOwnershipId', vehicleOwnershipController.updateVehicleOwnership);
+  // app.delete('/vehicleOwnership/:vehicleOwnershipId', vehicleOwnershipController.deleteVehicleOwnership);
+  // app.get('/vehicleOwnership/:vehicleOwnershipId', vehicleOwnershipController.findVehicleOwnershipById);
+  // app.get('/vehicleOwnerships', vehicleOwnershipController.getAllVehicleOwnership);
 
   app.post('/file/upload/getUploadFileUrl', [auth], file.getFileUploadUrl);
 };
