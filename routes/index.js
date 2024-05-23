@@ -28,7 +28,7 @@ export const routes = app => {
   app.post('/auth/post-register', authController.postRegisterUser);
 
   /*-----------------------User Routes---------------------------------------*/
-  app.get('/users', [auth, permissions.superAdmin], userController.getAllUser);
+  app.get('/users', userController.getAllUser);
   app.get('/user/find/userByEmail/:email', userController.findUserByEmail);
 
   /*-----------------------Catalog Routes---------------------------------------*/

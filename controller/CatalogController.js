@@ -80,7 +80,7 @@ export const findCatalog = async (req, res) => {
     const catalog = await Catalog.findById(catalogId);
 
     if (!catalog) {
-      return res.status(404).sendError('Motor cycle not found!');
+      return res.status(404).sendError('Catalog cycle not found!');
     }
 
     return res.send(catalog);

@@ -12,14 +12,10 @@ export const postRegisterUser = async (req, res) => {
 
     //Validate user
     let isEmailExist = await User.findOne({ email: body.email });
-    let isUsernameExist = await User.findOne({ username: body.username });
     if (isEmailExist) return res.status(400).send({ messages: 'Email already used!' });
-    if (isUsernameExist) {
-      return res.status(400).send({ messages: 'Username already taken!' });
-    }
-
+  
     let user = new User({
-      ...lodash.pick(body, ['email', 'username', 'picture', 'user_id']),
+      ...lodash.pick(body, ['email', 'picture', 'user_id']),
     });
 
     if (!user.picture) {
@@ -27,12 +23,12 @@ export const postRegisterUser = async (req, res) => {
     }
 
     // Set default Role
-    user.role = '';
+    user.role = 'CUSTOMER';
 
     //Save User To Database
     let newUser = await user.save();
 
-    newUser = lodash.pick(newUser, ['fullName', 'email', 'username', 'user_id']);
+    newUser = lodash.pick(newUser, ['email, ', 'user_id']);
 
     return res.send(newUser);
   } catch (e) {
