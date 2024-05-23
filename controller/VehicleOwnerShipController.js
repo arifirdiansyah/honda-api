@@ -1,5 +1,5 @@
-import { VehicleOwnership } from '../models/VehicleOwnership.js';
 import lodash from 'lodash';
+import { VehicleOwnership } from '../models/VehicleOwnerShip';
 
 /*
  * POST
