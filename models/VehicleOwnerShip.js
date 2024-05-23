@@ -25,4 +25,4 @@ const vehicleOwnershipSchema = new Schema(
 
 vehicleOwnershipSchema.plugin(toJson);
 
-export const VehicleOwnership = model('VehicleOwnership', vehicleOwnershipSchema);
+export const VehicleOwnerShip = model('VehicleOwnership', vehicleOwnershipSchema);

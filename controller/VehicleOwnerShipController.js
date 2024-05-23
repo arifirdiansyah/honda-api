@@ -1,5 +1,5 @@
 import lodash from 'lodash';
-import { VehicleOwnership } from '../models/VehicleOwnerShip';
+import { VehicleOwnerShip } from '../models/VehicleOwnerShip';
 
 /*
  * POST
@@ -8,7 +8,7 @@ import { VehicleOwnership } from '../models/VehicleOwnerShip';
 export const addVehicleOwnership = async (req, res) => {
   try {
     const { user_id, motorcycleId } = req.body;
-    const vehicleOwnership = new VehicleOwnership({ user_id, motorcycleId });
+    const vehicleOwnership = new VehicleOwnerShip({ user_id, motorcycleId });
     await vehicleOwnership.save();
     return res.status(201).json(vehicleOwnership);
   } catch (error) {
@@ -25,7 +25,7 @@ export const updateVehicleOwnership = async (req, res) => {
   try {
     const { vehicleOwnershipId } = req.params;
     const body = req.body;
-    const vehicleOwnership = await VehicleOwnership.findByIdAndUpdate(
+    const vehicleOwnership = await VehicleOwnerShip.findByIdAndUpdate(
       vehicleOwnershipId,
       lodash.pick(body, ['user_id', 'motorcycleId']),
       { new: true }
@@ -48,7 +48,7 @@ export const updateVehicleOwnership = async (req, res) => {
 export const deleteVehicleOwnership = async (req, res) => {
   try {
     const { vehicleOwnershipId } = req.params;
-    const vehicleOwnership = await VehicleOwnership.findByIdAndDelete(vehicleOwnershipId);
+    const vehicleOwnership = await VehicleOwnerShip.findByIdAndDelete(vehicleOwnershipId);
 
     if (!vehicleOwnership) {
       return res.status(404).send({ error: 'Vehicle ownership not found!' });
@@ -67,7 +67,7 @@ export const deleteVehicleOwnership = async (req, res) => {
 export const findVehicleOwnershipById = async (req, res) => {
   try {
     const { vehicleOwnershipId } = req.params;
-    const vehicleOwnership = await VehicleOwnership.findById(vehicleOwnershipId).populate('motorcycleId');
+    const vehicleOwnership = await VehicleOwnerShip.findById(vehicleOwnershipId).populate('motorcycleId');
 
     if (!vehicleOwnership) {
       return res.status(404).send({ error: 'Vehicle ownership not found!' });
@@ -85,7 +85,7 @@ export const findVehicleOwnershipById = async (req, res) => {
  */
 export const getAllVehicleOwnership = async (req, res) => {
   try {
-    const vehicleOwnerships = await VehicleOwnership.find().populate('motorcycleId');
+    const vehicleOwnerships = await VehicleOwnerShip.find().populate('motorcycleId');
     return res.send(vehicleOwnerships);
   } catch (error) {
     console.error('Failed to load vehicle ownerships data:', error);
