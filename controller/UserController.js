@@ -1,5 +1,4 @@
 import { User } from '../models/UserModel.js';
-import { selectOnlyGeneralUsersFields } from '../libs/users/user-populate-filed.js';
 
 /*
  * POST
@@ -7,7 +6,7 @@ import { selectOnlyGeneralUsersFields } from '../libs/users/user-populate-filed.
  * */
 export const getAllUser = async (req, res) => {
   try {
-    const users = await User.find().select(selectOnlyGeneralUsersFields());
+    const users = await User.find();
     return res.send(users);
   } catch (e) {
     return res.status(500).sendError('Failed load users data');
@@ -21,8 +20,7 @@ export const getAllUser = async (req, res) => {
 export const findUserByEmail = async (req, res) => {
   try {
     const { email } = req.params;
-    const user = await User.findOne({ email: email, status: 'ACTIVE' })
-      .select(selectOnlyGeneralUsersFields());
+    const user = await User.findOne({ email: email });
 
     if (!user) {
       return res.status(404).sendError('User not found!');

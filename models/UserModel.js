@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, ObjectId } from 'mongoose';
 import toJson from '@meanie/mongoose-to-json';
 
 const userSchema = new Schema(
@@ -23,8 +23,12 @@ const userSchema = new Schema(
     },
     role: {
       type: String,
-      enum: ['SUPER_ADMIN', 'ADMIN', 'CUSTOMER'],
+      enum: ['SUPER_ADMIN', 'ADMIN', 'CUSTOMER', 'DEALER_ADMIN'],
       default: 'CUSTOMER',
+    },
+    dealer: {
+      type: ObjectId,
+      ref: 'Dealership'
     },
     status: {
       type: String,
