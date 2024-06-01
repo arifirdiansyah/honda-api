@@ -14,6 +14,26 @@ export const getAllUser = async (req, res) => {
 };
 
 /*
+ * PUT
+ * Update user
+ * */
+export const updateUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findByIdAndUpdate(userId, req.body);
+
+    if (!user) {
+      return res.status(404).sendError('User not found!');
+    }
+    const newUpdatedUser = await User.findById(user.id);
+    return res.send(newUpdatedUser);
+  } catch (e) {
+    return res.status(500).sendError(e);
+  }
+};
+
+
+/*
  * GET
  * Find user by email
  * */

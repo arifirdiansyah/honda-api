@@ -28,6 +28,7 @@ export const routes = app => {
 
   /*-----------------------User Routes---------------------------------------*/
   app.get('/users', userController.getAllUser);
+  app.put('/user/update/:userId', userController.updateUser);
   app.get('/user/find/userByEmail/:email', userController.findUserByEmail);
 
   /*-----------------------Catalog Routes---------------------------------------*/
