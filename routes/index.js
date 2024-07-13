@@ -10,10 +10,11 @@ import * as dealershipController from '../controller/DealershipController.js';
 import * as serviceController from '../controller/ServiceController.js';
 import * as servicePackageController from '../controller/ServicePackageController.js';
 import * as replacePartController from '../controller/ReplacePartController.js';
+import * as ownershipController from '../controller/VehicleOwnerShipController.js';
 
 export const routes = app => {
   // Render home page
-  app.get('/', function (req, res) {
+  app.get('/', function(req, res) {
     return res.send({ message: 'Welcome to Honda API' });
   });
 
@@ -27,65 +28,57 @@ export const routes = app => {
   app.post('/auth/post-register', authController.postRegisterUser);
 
   /*-----------------------User Routes---------------------------------------*/
-  app.get('/users', userController.getAllUser);
-  app.put('/user/update/:userId', userController.updateUser);
-  app.get('/user/find/userByEmail/:email', userController.findUserByEmail);
+  app.get('/users', [auth, permissions.superAdmin], userController.getAllUser);
+  app.put('/user/update/:userId', [auth, permissions.superAdmin], userController.updateUser);
+  app.get('/user/find/userByEmail/:email', [auth, permissions.superAdmin], userController.findUserByEmail);
 
   /*-----------------------Catalog Routes---------------------------------------*/
-  app.post('/catalog/add', catalogController.addCatalog);
-  app.put('/catalog/update/:catalogId', catalogController.updateCatalog);
-  app.delete('/catalog/:catalogId', catalogController.deleteCatalog);
-  app.get('/catalog/:catalogId', catalogController.findCatalog);
-  app.get('/catalogs', catalogController.getAllCatalog);
+  app.post('/catalog/add', [auth, permissions.superAdmin], catalogController.addCatalog);
+  app.put('/catalog/update/:catalogId', [auth, permissions.superAdmin], catalogController.updateCatalog);
+  app.delete('/catalog/:catalogId', [auth, permissions.superAdmin], catalogController.deleteCatalog);
+  app.get('/catalog/:catalogId', [auth], catalogController.findCatalog);
+  app.get('/catalogs', [auth], catalogController.getAllCatalog);
 
   /*-----------------------Motorcycle Routes---------------------------------------*/
-  app.post('/motorcycle/add', motorcycleController.addMotorCycle);
-  app.put('/motorcycle/update/:motorCycleId', motorcycleController.updateMotorCycle);
-  app.delete('/motorcycle/:motorCycleId', motorcycleController.deleteMotorCycle);
-  app.get('/motorcycle/:motorCycleId', motorcycleController.findMotorCycle);
-  app.get('/motorcycles', motorcycleController.getAllMotorCycle);
+  app.post('/motorcycle/add', [auth, permissions.superAdmin], motorcycleController.addMotorCycle);
+  app.put('/motorcycle/update/:motorCycleId', [auth, permissions.superAdmin], motorcycleController.updateMotorCycle);
+  app.delete('/motorcycle/:motorCycleId', [auth, permissions.superAdmin], motorcycleController.deleteMotorCycle);
+  app.get('/motorcycle/:motorCycleId', [auth], motorcycleController.findMotorCycle);
+  app.get('/motorcycles', [auth], motorcycleController.getAllMotorCycle);
 
   /*-----------------------Part Routes---------------------------------------*/
-  app.post('/part/add', partController.addPart);
-  app.put('/part/update/:partId', partController.updatePart);
-  app.delete('/part/:partId', partController.deletePart);
-  app.get('/part/:partId', partController.findPart);
-  app.get('/parts', partController.getAllPart);
+  app.post('/part/add', [auth, permissions.superAdmin], partController.addPart);
+  app.put('/part/update/:partId', [auth, permissions.superAdmin], partController.updatePart);
+  app.delete('/part/:partId', [auth, permissions.superAdmin], partController.deletePart);
+  app.get('/part/:partId', [auth], partController.findPart);
+  app.get('/parts', [auth], partController.getAllPart);
 
   /*-----------------------Dealership Route---------------------------------------*/
-  app.post('/dealership/add', dealershipController.createDealership);
-  app.put('/dealership/update/:dealershipId', dealershipController.updateDealership);
-  app.delete('/dealership/:dealershipId', dealershipController.deleteDealership);
-  app.get('/dealership/:dealershipId', dealershipController.findDealershipById);
-  app.get('/dealerships', dealershipController.getAllDealership);
+  app.post('/dealership/add', [auth, permissions.superAdmin], dealershipController.createDealership);
+  app.put('/dealership/update/:dealershipId', [auth, permissions.superAdmin], dealershipController.updateDealership);
+  app.delete('/dealership/:dealershipId', [auth, permissions.superAdmin], dealershipController.deleteDealership);
+  app.get('/dealership/:dealershipId', [auth], dealershipController.findDealershipById);
+  app.get('/dealerships', [auth], dealershipController.getAllDealership);
 
   /*-----------------------Part Service---------------------------------------*/
-  app.post('/service/add', serviceController.createService);
-  app.put('/service/update/:serviceId', serviceController.updateService);
-  app.delete('/service/:serviceId', serviceController.deleteService);
-  app.get('/service/:serviceId', serviceController.findServiceById);
-  app.get('/services', serviceController.getAllService);
+  app.post('/service/add', [auth, permissions.admin], serviceController.createService);
+  app.put('/service/update/:serviceId', [auth, permissions.admin], serviceController.updateService);
+  app.delete('/service/:serviceId', [auth, permissions.admin], serviceController.deleteService);
+  app.get('/service/:serviceId', [auth], serviceController.findServiceById);
+  app.get('/services', [auth], serviceController.getAllService);
 
   /*----------------------- Part ServicePackage ---------------------------------------*/
-  app.post('/servicePackage/add', servicePackageController.addServicePackage);
-  app.put('/servicePackage/update/:servicePackageId', servicePackageController.updateServicePackage);
-  app.delete('/servicePackage/:servicePackageId', servicePackageController.deleteServicePackage);
-  app.get('/servicePackage/:servicePackageId', servicePackageController.findServicePackageById);
-  app.get('/servicePackages', servicePackageController.getAllServicePackage);
+  app.post('/servicePackage/add', [auth, permissions.admin], servicePackageController.addServicePackage);
+  app.put('/servicePackage/update/:servicePackageId', [auth, permissions.admin], servicePackageController.updateServicePackage);
+  app.delete('/servicePackage/:servicePackageId', [auth, permissions.admin], servicePackageController.deleteServicePackage);
+  app.get('/servicePackage/:servicePackageId', [auth], servicePackageController.findServicePackageById);
+  app.get('/servicePackages', [auth], servicePackageController.getAllServicePackage);
 
-  /*-----------------------Part ReplacePart---------------------------------------*/
-  app.post('/replacePart/add', replacePartController.addReplacePart);
-  app.put('/replacePart/update/:replacePartId', replacePartController.updateReplacePart);
-  app.delete('/replacePart/:replacePartId', replacePartController.deleteReplacePart);
-  app.get('/replacePart/:replacePartId', replacePartController.findReplacePartById);
-  app.get('/replaceParts', replacePartController.getAllReplaceParts);
 
-  // /*-----------------------Part VehicleOwnerShip---------------------------------------*/
-  // app.post('/vehicleOwnership/add', vehicleOwnershipController.addVehicleOwnership);
-  // app.put('/vehicleOwnership/update/:vehicleOwnershipId', vehicleOwnershipController.updateVehicleOwnership);
-  // app.delete('/vehicleOwnership/:vehicleOwnershipId', vehicleOwnershipController.deleteVehicleOwnership);
-  // app.get('/vehicleOwnership/:vehicleOwnershipId', vehicleOwnershipController.findVehicleOwnershipById);
-  // app.get('/vehicleOwnerships', vehicleOwnershipController.getAllVehicleOwnership);
+  /*-----------------------Part VehicleOwnerShip---------------------------------------*/
+  app.post('/vehicleOwnership/add', [auth], ownershipController.addVehicleOwnership);
+  app.delete('/vehicleOwnership/delete', [auth], ownershipController.deleteVehicleOwnership);
+  app.get('/vehicleOwnership', [auth], ownershipController.getVehicleOwnershipData);
 
   app.post('/file/upload/getUploadFileUrl', [auth], file.getFileUploadUrl);
 };

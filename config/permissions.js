@@ -42,7 +42,7 @@ async function checkRoleHasAccess(user, permissionRequired) {
       case 'SUPER_ADMIN':
         return true;
         case 'ADMIN':
-          return ['ADMIN', 'CUSTOMER'].includes(permissionRequired);
+          return ['ADMIN', 'SUPER_ADMIN'].includes(permissionRequired);
           case 'CUSTOMER':
             return ['CUSTOMER'].includes(permissionRequired);
       default:
