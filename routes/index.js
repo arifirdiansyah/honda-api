@@ -31,6 +31,7 @@ export const routes = app => {
   app.get('/users', [auth, permissions.superAdmin], userController.getAllUser);
   app.put('/user/update/:userId', [auth, permissions.superAdmin], userController.updateUser);
   app.get('/user/find/userByEmail/:email', [auth, permissions.superAdmin], userController.findUserByEmail);
+  app.get('/user/my-info', [auth], userController.findUserCurrentUser);
 
   /*-----------------------Catalog Routes---------------------------------------*/
   app.post('/catalog/add', [auth, permissions.superAdmin], catalogController.addCatalog);
@@ -61,16 +62,16 @@ export const routes = app => {
   app.get('/dealerships', [auth], dealershipController.getAllDealership);
 
   /*-----------------------Part Service---------------------------------------*/
-  app.post('/service/add', [auth, permissions.admin], serviceController.createService);
-  app.put('/service/update/:serviceId', [auth, permissions.admin], serviceController.updateService);
-  app.delete('/service/:serviceId', [auth, permissions.admin], serviceController.deleteService);
+  app.post('/service/add', [auth, permissions.dealerAdmin], serviceController.createService);
+  app.put('/service/update/:serviceId', [auth, permissions.dealerAdmin], serviceController.updateService);
+  app.delete('/service/:serviceId', [auth, permissions.dealerAdmin], serviceController.deleteService);
   app.get('/service/:serviceId', [auth], serviceController.findServiceById);
   app.get('/services', [auth], serviceController.getAllService);
 
-  /*----------------------- Part ServicePackage ---------------------------------------*/
-  app.post('/servicePackage/add', [auth, permissions.admin], servicePackageController.addServicePackage);
-  app.put('/servicePackage/update/:servicePackageId', [auth, permissions.admin], servicePackageController.updateServicePackage);
-  app.delete('/servicePackage/:servicePackageId', [auth, permissions.admin], servicePackageController.deleteServicePackage);
+  /*----------------------- ServicePackage ---------------------------------------*/
+  app.post('/servicePackage/add', [auth, permissions.dealerAdmin], servicePackageController.addServicePackage);
+  app.put('/servicePackage/update/:servicePackageId', [auth, permissions.dealerAdmin], servicePackageController.updateServicePackage);
+  app.delete('/servicePackage/:servicePackageId', [auth, permissions.dealerAdmin], servicePackageController.deleteServicePackage);
   app.get('/servicePackage/:servicePackageId', [auth], servicePackageController.findServicePackageById);
   app.get('/servicePackages', [auth], servicePackageController.getAllServicePackage);
 

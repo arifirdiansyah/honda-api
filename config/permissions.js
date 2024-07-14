@@ -5,19 +5,19 @@ export const superAdmin = async (req, res, next) => {
       return next();
     }
     return res.status(403).sendError('Access denied. user has no permission access');
-  } catch (e) {
+  } catch ( e ) {
     return res.status(403).sendError('Access denied. user has no permission access');
   }
 };
 
-export const admin = async (req, res, next) => {
+export const dealerAdmin = async (req, res, next) => {
   try {
-    const role = await checkRoleHasAccess(req.user, 'ADMIN');
+    const role = await checkRoleHasAccess(req.user, 'DEALER_ADMIN');
     if (role) {
       return next();
     }
     return res.status(403).sendError('Access denied. user has no permission access');
-  } catch (e) {
+  } catch ( e ) {
     return res.status(403).sendError('Access denied. user has no permission access');
   }
 };
@@ -29,7 +29,7 @@ export const customer = async (req, res, next) => {
       return next();
     }
     return res.status(403).sendError('Access denied. user has no permission access');
-  } catch (e) {
+  } catch ( e ) {
     return res.status(403).sendError('Access denied. user has no permission access');
   }
 };
@@ -38,17 +38,17 @@ async function checkRoleHasAccess(user, permissionRequired) {
   try {
     const role = user.role;
 
-    switch (role) {
+    switch ( role ) {
       case 'SUPER_ADMIN':
         return true;
-        case 'ADMIN':
-          return ['ADMIN', 'SUPER_ADMIN'].includes(permissionRequired);
-          case 'CUSTOMER':
-            return ['CUSTOMER'].includes(permissionRequired);
+      case 'DEALER_ADMIN':
+        return ['DEALER_ADMIN', 'SUPER_ADMIN'].includes(permissionRequired);
+      case 'CUSTOMER':
+        return ['CUSTOMER'].includes(permissionRequired);
       default:
         return false;
     }
-  } catch (e) {
+  } catch ( e ) {
     return false;
   }
 }
