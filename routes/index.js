@@ -46,6 +46,7 @@ export const routes = app => {
   app.delete('/motorcycle/:motorCycleId', [auth, permissions.superAdmin], motorcycleController.deleteMotorCycle);
   app.get('/motorcycle/:motorCycleId', [auth], motorcycleController.findMotorCycle);
   app.get('/motorcycles', [auth], motorcycleController.getAllMotorCycle);
+  app.get('/motorcycle/vin/:vin', [auth], motorcycleController.findMotorCycleByVinNumber);
 
   /*-----------------------Part Routes---------------------------------------*/
   app.post('/part/add', [auth, permissions.superAdmin], partController.addPart);
@@ -61,12 +62,13 @@ export const routes = app => {
   app.get('/dealership/:dealershipId', [auth], dealershipController.findDealershipById);
   app.get('/dealerships', [auth], dealershipController.getAllDealership);
 
-  /*-----------------------Part Service---------------------------------------*/
+  /*-----------------------Service---------------------------------------*/
   app.post('/service/add', [auth, permissions.dealerAdmin], serviceController.createService);
   app.put('/service/update/:serviceId', [auth, permissions.dealerAdmin], serviceController.updateService);
   app.delete('/service/:serviceId', [auth, permissions.dealerAdmin], serviceController.deleteService);
   app.get('/service/:serviceId', [auth], serviceController.findServiceById);
-  app.get('/services', [auth], serviceController.getAllService);
+  app.get('/services', [auth], serviceController.getAllServiceByDealer);
+  app.get('/services/:motorcycleId', [auth], serviceController.getAllServiceByMotorcycle);
 
   /*----------------------- ServicePackage ---------------------------------------*/
   app.post('/servicePackage/add', [auth, permissions.dealerAdmin], servicePackageController.addServicePackage);

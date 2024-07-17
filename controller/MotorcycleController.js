@@ -95,6 +95,27 @@ export const findMotorCycle = async (req, res) => {
 
 /*
 * GET
+* Find motorcycle by VIN Number
+* */
+export const findMotorCycleByVinNumber = async (req, res) => {
+  try {
+    const { vin } = req.params;
+
+    // Find motorcycle by id
+    const motorCycle = await Motorcycle.findOne({ vin }).populate('catalogId');
+
+    if (!motorCycle) {
+      return res.status(404).sendError('Motor cycle not found!');
+    }
+
+    return res.send(motorCycle);
+  } catch ( e ) {
+    return res.status(500).sendError(e);
+  }
+};
+
+/*
+* GET
 * Get all motorcycle
 * */
 export const getAllMotorCycle = async (req, res) => {
