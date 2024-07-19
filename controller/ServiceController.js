@@ -34,7 +34,13 @@ export const getAllServiceByDealer = async (req, res) => {
 export const getAllServiceByMotorcycle = async (req, res) => {
   try {
     const { motorcycleId } = req.params;
-    const services = await Service.find({ motorcycleId }).populate(['replacedParts', 'motorcycleId']);
+    const services = await Service.find({ motorcycleId }).sort('asc').populate(['servicePackage', 'motorcycleId', 'dealership', {
+      path: 'replacedParts',
+      populate: {
+        path: 'part',
+        model: 'Part',
+      },
+    }]);
     return res.json(services);
   } catch ( error ) {
     console.error('Failed to load services data:', error);

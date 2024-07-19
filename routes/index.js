@@ -9,7 +9,6 @@ import * as partController from '../controller/PartController.js';
 import * as dealershipController from '../controller/DealershipController.js';
 import * as serviceController from '../controller/ServiceController.js';
 import * as servicePackageController from '../controller/ServicePackageController.js';
-import * as replacePartController from '../controller/ReplacePartController.js';
 import * as ownershipController from '../controller/VehicleOwnerShipController.js';
 
 export const routes = app => {
@@ -80,7 +79,7 @@ export const routes = app => {
 
   /*-----------------------Part VehicleOwnerShip---------------------------------------*/
   app.post('/vehicleOwnership/add', [auth], ownershipController.addVehicleOwnership);
-  app.delete('/vehicleOwnership/delete', [auth], ownershipController.deleteVehicleOwnership);
+  app.delete('/vehicleOwnership/:motorcycleId', [auth], ownershipController.deleteVehicleOwnership);
   app.get('/vehicleOwnership', [auth], ownershipController.getVehicleOwnershipData);
 
   app.post('/file/upload/getUploadFileUrl', [auth], file.getFileUploadUrl);

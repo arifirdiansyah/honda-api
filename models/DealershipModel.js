@@ -32,6 +32,14 @@ const dealershipSchema = new Schema(
       maxlength: 250,
     },
     address: addressSchema,
+    photo: {
+      type: String,
+      required: true,
+    },
+    phone: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,

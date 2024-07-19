@@ -1,4 +1,5 @@
 import { VehicleOwnerShip } from '../models/VehicleOwnerShip.js';
+import { Motorcycle } from '../models/Motorcycle.js';
 
 /*
  * POST
@@ -12,25 +13,36 @@ export const addVehicleOwnership = async (req, res) => {
       return res.status(500).send({ error: 'Wrong motorcycle data' });
     }
 
-    const registeredVehicle = await VehicleOwnerShip.findOne({ user_id: req.user.id }).populate('motorcycleId');
+    const motorCycle = await Motorcycle.findById(motorcycleId).populate('catalogId');
+
+    if (!motorCycle) {
+      return res.status(404).send('Vehicle not found');
+    }
+
+    const registeredVehicle = await VehicleOwnerShip.findOne({ user_id: req.user.id }).populate({
+      path: 'motorcycleId',
+      populate: {
+        path: 'catalogId',
+        model: 'Catalog',
+      },
+    });
 
     if (registeredVehicle) {
-      console.log(registeredVehicle);
       const isVehicleExist = registeredVehicle.motorcycleId.find(motor => motor.id === motorcycleId);
 
       // When vehicle exist dont register it again
       if (isVehicleExist) {
-        return res.send(registeredVehicle);
+        return res.send(isVehicleExist);
       }
 
       registeredVehicle.motorcycleId.push(motorcycleId);
-      const savedVehicle = await registeredVehicle.save();
-      return res.send(savedVehicle);
+      await registeredVehicle.save();
+      return res.send(motorCycle);
     }
 
-    const vehicleOwnership = new VehicleOwnerShip({ user_id: req.user.id, motorcycleId: [motorcycleId] });
+    const vehicleOwnership = new VehicleOwnerShip({ user_id: req.user.id, motorcycleId: motorcycleId });
     await vehicleOwnership.save();
-    return res.send(vehicleOwnership);
+    return res.send(motorCycle);
   } catch (error) {
     return res.status(500).send({ error: 'Failed to create vehicle ownership', details: error.message });
   }
@@ -43,7 +55,7 @@ export const addVehicleOwnership = async (req, res) => {
  */
 export const deleteVehicleOwnership = async (req, res) => {
   try {
-    const { motorcycleId } = req.body;
+    const { motorcycleId } = req.params;
     const vehicleOwnership = await VehicleOwnerShip.findOne({ user_id: req.user.id }).populate('motorcycleId');
 
     if (!vehicleOwnership) {
@@ -66,12 +78,18 @@ export const deleteVehicleOwnership = async (req, res) => {
  */
 export const getVehicleOwnershipData = async (req, res) => {
   try {
-    const vehicleOwnership = await VehicleOwnerShip.findOne({ user_id: req.user.id }).populate('motorcycleId');
+    const vehicleOwnership = await VehicleOwnerShip.findOne({ user_id: req.user.id }).populate([{
+      path: 'motorcycleId',
+      populate: {
+        path: 'catalogId',
+        model: 'Catalog',
+      },
+    }]);
 
     if (!vehicleOwnership) {
-      return res.send({});
+      return res.send([]);
     }
-    return res.send(vehicleOwnership);
+    return res.send(vehicleOwnership.motorcycleId);
   } catch (error) {
     console.error('Error finding vehicle ownership by id:', error);
     return res.status(500).send({ error: 'Internal Server Error', details: error.message });
