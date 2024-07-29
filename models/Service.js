@@ -58,6 +58,10 @@ const serviceSchema = new Schema(
       type: String,
       required: false,
     },
+    nama: {
+      type: String,
+      required: false,
+    },
     replacedParts: [replacedPartsSchema],
   },
   {

@@ -94,6 +94,7 @@ export const createService = async (req, res) => {
       totalPrice,
       replacedParts,
       description,
+      nama
     } = req.body;
 
     // Create service object
@@ -107,6 +108,7 @@ export const createService = async (req, res) => {
       replacedParts,
       description,
       dealership: req.user.dealer,
+      nama
     });
 
     // Save service to db
@@ -154,6 +156,7 @@ export const updateService = async (req, res) => {
         'fee',
         'replacedParts',
         'description',
+        'nama'
       ]),
       { new: true },
     ).populate(['replacedParts', 'motorcycleId']);
