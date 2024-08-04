@@ -67,3 +67,24 @@ export const findUserCurrentUser = async (req, res) => {
     return res.status(500).sendError(e);
   }
 };
+
+/*
+ * GET
+ * Find user by email
+ * */
+export const updateProfil = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { name } = req.body;
+    const user = await User.findUserById(userId);
+
+    if (!user) {
+      return res.status(404).sendError('User not found!');
+    }
+    user.name = name;
+    await user.save();
+    return res.send(user);
+  } catch ( e ) {
+    return res.status(500).sendError(e);
+  }
+};
