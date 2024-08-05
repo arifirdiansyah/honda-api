@@ -28,7 +28,7 @@ export const routes = app => {
 
   /*-----------------------User Routes---------------------------------------*/
   app.get('/users', [auth, permissions.superAdmin], userController.getAllUser);
-  app.put('/user/update/:userId', [auth, permissions.superAdmin], userController.updateUser);
+  app.put('/user/update/:userId', [auth], userController.updateUser);
   app.get('/user/find/userByEmail/:email', [auth, permissions.superAdmin], userController.findUserByEmail);
   app.get('/user/my-info', [auth], userController.findUserCurrentUser);
 
