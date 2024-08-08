@@ -75,16 +75,31 @@ export const findUserCurrentUser = async (req, res) => {
 export const updateProfil = async (req, res) => {
   try {
     const { userId } = req.params;
-    const { name } = req.body;
-    const user = await User.findUserById(userId);
+    const { name, phoneNumber, address } = req.body; // Ambil name, phoneNumber, dan address dari request body
+    const user = await User.findById(userId); // findUserById diganti dengan findById
 
     if (!user) {
       return res.status(404).sendError('User not found!');
     }
-    user.name = name;
+
+    // Update nama
+    if (name) {
+      user.name = name;
+    }
+
+    // Update nomor HP dan alamat jika peran adalah CUSTOMER
+    if (user.role === 'CUSTOMER') {
+      if (phoneNumber) {
+        user.phoneNumber = phoneNumber;
+      }
+      if (address) {
+        user.address = address;
+      }
+    }
+
     await user.save();
     return res.send(user);
-  } catch ( e ) {
+  } catch (e) {
     return res.status(500).sendError(e);
   }
 };

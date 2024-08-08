@@ -28,12 +28,25 @@ const userSchema = new Schema(
     },
     dealer: {
       type: ObjectId,
-      ref: 'Dealership'
+      ref: 'Dealership',
     },
     status: {
       type: String,
       enum: ['ACTIVE', 'BLOCKED', 'DELETED', 'PENDING', 'INACTIVE'],
       default: 'ACTIVE',
+    },
+    // Tambahan nomor HP dan alamat untuk role CUSTOMER
+    phoneNumber: {
+      type: String,
+      required: function () {
+        return this.role === 'CUSTOMER';
+      },
+    },
+    address: {
+      type: String,
+      required: function () {
+        return this.role === 'CUSTOMER';
+      },
     },
   },
   {
