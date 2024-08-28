@@ -42,6 +42,10 @@ const serviceSchema = new Schema(
       type: String,
       required: true,
     },
+    nextServiceDate: {
+      type: String,
+      required: true,
+    },
     mileage: {
       type: Number,
       required: true,

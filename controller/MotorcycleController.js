@@ -1,5 +1,6 @@
 import { Motorcycle } from '../models/Motorcycle.js';
 import lodash from 'lodash';
+import { Service } from '../models/Service.js';
 
 /*
 * POST
@@ -108,7 +109,13 @@ export const findMotorCycleByVinNumber = async (req, res) => {
       return res.status(404).sendError('Motor cycle not found!');
     }
 
-    return res.send(motorCycle);
+    const services = await Service.find({ motorcycleId: motorCycle.id }).sort({'updatedAt': -1}).limit(1);
+    const latestService = services ? services[0] : null;
+
+    return res.send({
+      motorCycle,
+      service: latestService
+    });
   } catch ( e ) {
     return res.status(500).sendError(e);
   }
